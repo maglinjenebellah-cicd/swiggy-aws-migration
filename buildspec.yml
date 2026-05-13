@@ -2,12 +2,15 @@ version: 0.2
 phases:
   install:
     commands:
-      - echo Installing dependencies...
-      - npm install
+      - echo "Installing dependencies..."
+  pre_build:
+    commands:
+      - echo "Scanning with Trivy..."
+      - trivy fs .
   build:
     commands:
-      - echo Building Docker Image...
-      - docker build -t swiggy-app .
+      - echo "Building Docker image..."
+      - docker build -t swiggy-app:latest .
   post_build:
     commands:
-      - echo Build completed on `date`
+      - echo "Build completed on `date`"
