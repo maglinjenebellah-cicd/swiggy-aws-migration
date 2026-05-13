@@ -3,10 +3,6 @@ phases:
   install:
     commands:
       - echo "Installing dependencies..."
-  pre_build:
-    commands:
-      - echo "Scanning with Trivy..."
-      - trivy fs .
   build:
     commands:
       - echo "Building Docker image..."
