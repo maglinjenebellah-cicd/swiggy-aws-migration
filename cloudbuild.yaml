@@ -14,3 +14,7 @@ steps:
       - --filename=gcp-deployment.yaml
       - --location=us-central1-a
       - --cluster=swiggy-cluster
+
+# THIS FIXES THE LOGGING ERROR COMPLETELY:
+options:
+  logging: CLOUD_LOGGING_ONLY
