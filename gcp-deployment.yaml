@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: swiggy-container
-          image: us-central1-docker.pkg.dev/internal-sandbox-446612/swiggy-repo/swiggy-app:latest
+          image: us-central1-docker.pkg.dev/internal-sandbox-446612/swiggy-repo/swiggy-app:COMMIT_SHA
           ports:
             - containerPort: 3000
 ---

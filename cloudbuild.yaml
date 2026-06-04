@@ -12,9 +12,9 @@ steps:
     args:
       - run
       - --filename=gcp-deployment.yaml
+      - --image=us-central1-docker.pkg.dev/$PROJECT_ID/swiggy-repo/swiggy-app:$SHORT_SHA
       - --location=us-central1-a
       - --cluster=swiggy-cluster
 
-# THIS FIXES THE LOGGING ERROR COMPLETELY:
 options:
   logging: CLOUD_LOGGING_ONLY
