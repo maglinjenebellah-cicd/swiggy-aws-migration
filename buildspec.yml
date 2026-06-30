@@ -3,6 +3,8 @@ version: 0.2
 env:
   variables:
     SONAR_URL: "http://54.173.154.249:9000"
+  parameter-store:
+    SONAR_TOKEN: "SONAR_TOKEN"
 
 phases:
   install:
@@ -25,7 +27,7 @@ phases:
   pre_build:
     commands:
       - echo "Running 3-Point Security Scan..."
-      # 1. SonarQube Scan (Uses plaintext URL and plaintext generated token)
+      # 1. SonarQube Scan
       - sonar-scanner -Dsonar.projectKey=swiggy-project -Dsonar.sources=. -Dsonar.host.url=$SONAR_URL -Dsonar.token=$SONAR_TOKEN
       # 2. OWASP Scan
       - ./dependency-check/bin/dependency-check.sh --project "Swiggy" --scan . --format "HTML" || true
