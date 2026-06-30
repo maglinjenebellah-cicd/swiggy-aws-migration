@@ -1,9 +1,8 @@
 version: 0.2
 
 env:
-  parameter-store:
-    SONAR_URL: "/swiggy/sonar/url"
-    SONAR_TOKEN: "/swiggy/sonar/token"
+  variables:
+    SONAR_URL: "http://54.173.154.249:9000"
 
 phases:
   install:
@@ -26,8 +25,8 @@ phases:
   pre_build:
     commands:
       - echo "Running 3-Point Security Scan..."
-      # 1. SonarQube Scan
-      - sonar-scanner -Dsonar.projectKey=swiggy-project -Dsonar.sources=. -Dsonar.host.url=$SONAR_URL -Dsonar.login=$SONAR_TOKEN
+      # 1. SonarQube Scan (Uses plaintext URL and plaintext generated token)
+      - sonar-scanner -Dsonar.projectKey=swiggy-project -Dsonar.sources=. -Dsonar.host.url=$SONAR_URL -Dsonar.token=$SONAR_TOKEN
       # 2. OWASP Scan
       - ./dependency-check/bin/dependency-check.sh --project "Swiggy" --scan . --format "HTML" || true
       # 3. Trivy Scan
@@ -40,4 +39,4 @@ phases:
 
   post_build:
     commands:
-      - echo "Automation Success! Ready for Review."
+      - echo "Automation Success! Build and Scans completed."
