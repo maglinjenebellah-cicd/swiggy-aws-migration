@@ -3,8 +3,6 @@ version: 0.2
 env:
   variables:
     SONAR_URL: "http://54.173.154.249:9000"
-  parameter-store:
-    SONAR_TOKEN: "/swiggy/sonar/token"
 
 phases:
   install:
@@ -12,11 +10,6 @@ phases:
       nodejs: 18
     commands:
       - echo "Installing Scanning Tools..."
-      # Install Sonar Scanner
-      - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.7.0.2747-linux.zip
-      - unzip sonar-scanner-cli-4.7.0.2747-linux.zip
-      - mv sonar-scanner-4.7.0.2747-linux /opt/sonar-scanner
-      - ln -s /opt/sonar-scanner/bin/sonar-scanner /usr/local/bin/sonar-scanner
       # Install Trivy
       - wget https://github.com/aquasecurity/trivy/releases/download/v0.18.3/trivy_0.18.3_Linux-64bit.tar.gz
       - tar zxvf trivy_0.18.3_Linux-64bit.tar.gz
@@ -26,12 +19,10 @@ phases:
 
   pre_build:
     commands:
-      - echo "Running 3-Point Security Scan..."
-      # 1. SonarQube Scan
-      # - sonar-scanner -Dsonar.projectKey=swiggy-project -Dsonar.sources=. -Dsonar.host.url=$SONAR_URL -Dsonar.token=$SONAR_TOKEN
-      # 2. OWASP Scan
+      - echo "Running Security Scans..."
+      # 1. OWASP Scan
       - ./dependency-check/bin/dependency-check.sh --project "Swiggy" --scan . --format "HTML" || true
-      # 3. Trivy Scan
+      # 2. Trivy Scan
       - ./trivy fs .
 
   build:
