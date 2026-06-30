@@ -4,7 +4,7 @@ env:
   variables:
     SONAR_URL: "http://54.173.154.249:9000"
   parameter-store:
-    SONAR_TOKEN: "SONAR_TOKEN"
+    SONAR_TOKEN: "/swiggy/sonar/token"
 
 phases:
   install:
