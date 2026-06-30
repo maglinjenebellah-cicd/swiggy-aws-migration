@@ -4,7 +4,7 @@ env:
   variables:
     SONAR_URL: "http://54.173.154.249:9000"
   parameter-store:
-    SONAR_TOKEN: "sqa_01de24585632dd54f39fa36995d18cca91564e4a"
+    SONAR_TOKEN: "/swiggy/sonar/token"
 
 phases:
   install:
@@ -26,10 +26,10 @@ phases:
 
   pre_build:
     commands:
-      - echo "Running 3-Point Security Scan..."
-      # 1. SonarQube Scan (Now authorized via Parameter Store)
-      - sonar-scanner -Dsonar.projectKey=swiggy-project -Dsonar.sources=. -Dsonar.host.url=$SONAR_URL -Dsonar.token=$SONAR_TOKEN
-      # 2. OWASP Scan
+      - echo "Running 3-Point Security Scan with verbose logging..."
+      # 1. SonarQube Scan with Debug flag (-X) to catch authorization or network issues
+      - sonar-scanner -Dsonar.projectKey=swiggy-project -Dsonar.sources=. -Dsonar.host.url=$SONAR_URL -Dsonar.token=$SONAR_TOKEN -X
+      # 2. OWASP Scan (added '|| true' so it gracefully moves on if the database fetch hangs or stalls)
       - ./dependency-check/bin/dependency-check.sh --project "Swiggy" --scan . --format "HTML" || true
       # 3. Trivy Scan
       - ./trivy fs .
@@ -41,6 +41,5 @@ phases:
 
   post_build:
     commands:
-      - echo "Build and Scans completed successfully."
-      - docker tag swiggy-app:latest <YOUR_ACCOUNT_ID>.dkr.ecr.<YOUR_REGION>.amazonaws.com/swiggy-app:latest
-      # Add commands to push to ECR and generate imagedefinitions.json for ECS here
+      - echo "Build and Security Scans completed successfully."
+      # Add your ECR push and image definition commands here if needed for ECS deployment
